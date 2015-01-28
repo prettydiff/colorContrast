@@ -120,11 +120,18 @@
                 width     : 8em;
             }
             #output li li p {
+                padding: 0.25em 0;
+                width  : 100%;
+            }
+            #output .pass li p {
+                background  : transparent;
+                border-style: none;
+                font-size   : 1.4em;
+            }
+            #output .fail li p {
                 left    : -0.1em;
-                padding : 0.25em 0;
                 position: relative;
                 top     : 5.2em;
-                width   : 100%;
             }
             #output li li span {
                 display: block;
@@ -139,16 +146,19 @@
             #output li .exception {
                 font-size: 1em;
             }
+            #about {
+                max-width: 80em;
+            }
             #aboutLink {
-            	float: right;
-            	font-size: 1.4em;
-            	margin:0 1em 0 0;
-            	position:relative;
-            	bottom: -2em;
+                bottom   : -2em;
+                float    : right;
+                font-size: 1.4em;
+                margin   : 0 1em 0 0;
+                position : relative;
             }
             #about p,
             #about li {
-            	font-size: 1.4em;
+                font-size: 1.4em;
             }
         </style>
     </head>
@@ -203,21 +213,60 @@
             <ul id="output"></ul>
         </section>
         <section id="about">
-        	<h2>About this tool</h2>
-        	<p>I found several color contrast tools online, but I found none written in JavaScript and none that compared a plurality of colors. I tired of watching my coworkers endlessly comparing colors from a limited list of approved colors. There existed a need, so I built the tool.</p>
-        	<p>The intention of this application is to create all contrast comparisons for a given set of colors once. Since all colors are visible in a pass or fail state it should be immediately clear what combinations will be allowed. There is no need to even know what the acceptable rules and limitations are if using a tool like this.</p>
-        	<p>The following rules defined my approach:</p>
-        	<ul>
-        		<li><a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">Rationale for Chosen Contrast Ratios</a></li>
-        		<li><a href="http://www.w3.org/TR/WCAG20/#relativeluminancedef">Relative Luminance</a></li>
-        		<li><a href="http://www.w3.org/TR/WCAG20/#contrast-ratiodef">Contrast Ratio</a></li>
-        	</ul>
-        	<p>The solution is achieved by computing the relative luminance for a given color and then comparing that color with the defined contrast ratio. The mathmatical definitions are available in the W3C links mentioned above. The JavaScript solution is available in the JavaScript function <em>luminance</em> of this page's source code.</p>
-        	<p>The reason why I had trouble finding similar tools written in JavaScript is because JavaScript is bad at frational arithmetic. The solution to this problem is to proportionally multiply all values by a power of ten until you are far left of the decimal. A few extra digits is recommended for extra precision.</p>
+            <div><h2>About this tool</h2>
+                <p>I found several color contrast tools online, but I found none written
+                    in JavaScript and none that compared a plurality of colors. I tired of
+                    watching my coworkers endlessly comparing colors from a limited list of
+                    approved colors. There existed a need, so I built the tool.</p>
+                <p>The intention of this application is to create all contrast
+                    comparisons for a given set of colors once. Since all colors are visible
+                    in a pass or fail state it should be immediately clear what combinations
+                    will be allowed. There is no need to even know what the acceptable rules
+                    and limitations are if using a tool like this.</p>
+                <p>The following rules defined my approach:</p>
+                <ul>
+                    <li><a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">Rationale
+                        for Chosen Contrast Ratios</a></li>
+                    <li><a href="http://www.w3.org/TR/WCAG20/#relativeluminancedef">Relative
+                        Luminance</a></li>
+                    <li><a href="http://www.w3.org/TR/WCAG20/#contrast-ratiodef">Contrast
+                        Ratio</a></li>
+                </ul>
+                <p>The solution is achieved by computing the relative luminance for a
+                    given color and then comparing that color with the defined contrast
+                    ratio. The mathmatical definitions are available in the W3C links
+                    mentioned above. The JavaScript solution is available in the JavaScript
+                    function
+                    <em>luminance</em>
+                    of this page's source code.</p>
+                <p>The reason why I had trouble finding similar tools written in
+                    JavaScript is because JavaScript is bad at frational arithmetic. The
+                    solution to this problem is to proportionally multiply all values by a
+                    power of ten until you are far left of the decimal. A few extra digits
+                    is recommended for extra precision.</p>
+            </div>
+            <div><h2>MIT License</h2>
+                <p>Copyright (c) 2015 Austin Cheney</p>
+                <p>Permission is hereby granted, free of charge, to any person obtaining
+                    a copy of this software and associated documentation files (the
+                    "Software"), to deal in the Software without restriction, including
+                    without limitation the rights to use, copy, modify, merge, publish,
+                    distribute, sublicense, and/or sell copies of the Software, and to
+                    permit persons to whom the Software is furnished to do so, subject to
+                    the following conditions:</p>
+                <p>The above copyright notice and this permission notice shall be
+                    included in all copies or substantial portions of the Software.</p>
+                <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+                    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+                    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+                    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+                    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+                    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+                    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></div>
         </section>
     </body>
     <script type="application/javascript">
-    	/*global document, localStorage*/
+        /*global document, localStorage*/
         (function () {
             "use strict";
             var settings     = {},
@@ -275,7 +324,7 @@
                             settings.contrast = 4.5;
                         }
                     }
-                    document.getElementById("combinations").getElementsByTagName("strong")[0].innerHTML = settings.contrast + ":1";
+                    document.getElementById("combinations").getElementsByTagName("strong")[0].innerHTML = settings.contrast + " : 1";
                     if (node !== undefined) {
                         localStorage.colorContrast = JSON.stringify(settings);
                     }
@@ -373,7 +422,7 @@
                     if (settings.selectedColor !== "New") {
                         (function () {
                             var colors = settings.colorSchemes,
-                                aa      = 0;
+                                aa     = 0;
                             for (a = colors.length - 1; aa > -1; aa -= 1) {
                                 if (colors[aa].name === settings.selectedColor) {
                                     if (colors[aa].value.replace(/\s+/g, "") === text.replace(/\s+/g, "")) {
@@ -437,6 +486,7 @@
                                         ps.innerHTML = data[b].value + " <span>" + (Math.round(ratio * 10) / 10) + " : 1</span>";
                                         lis.appendChild(ps);
                                         lis.style.background = data[b].value;
+                                        lis.style.color      = data[a].value;
                                         lis.setAttribute("class", classy);
                                         pass.appendChild(lis);
                                         any = true;
@@ -516,7 +566,7 @@
                 document.getElementById("scheme-modify").onclick = schemeModify;
                 setContrast();
                 if (settings.selectedColor !== "New") {
-                	render();
+                    render();
                 }
             }());
         }());
