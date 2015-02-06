@@ -1,14 +1,7 @@
-<<<<<<< HEAD
 ﻿# [WCAG 2.0](http://www.w3.org/TR/WCAG20/) compliance color contrast
 ====
 
 [Try it online](http://prettydiff.com/ignore/colorContrast/colorContrast.html)
-=======
-# [WCAG 2.0](http://www.w3.org/TR/WCAG20/) compliance color contrast
-====
-
-[Try it online](http://mailmarkup.org/colorContrast.html)
->>>>>>> 7574cc8e86532e79b94b8e5f2390f2a5f6d6705b
 
 Rationale
 ---
