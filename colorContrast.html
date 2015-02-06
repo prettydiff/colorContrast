@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Color contrast</title>
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <meta content="index, follow" name="robots"/>
+        <meta content="text/css" http-equiv="content-style-type"/>
+        <meta content="application/javascript" http-equiv="content-script-type"/>
+        <meta content="en" http-equiv="Content-Language"/>
+        <meta content="application/xhtml+xml,charset=UTF-8" http-equiv="Content-Type"/>
+        <style type="text/css">
+            *:focus,
+            .inputfocus {
+                outline: 0.15em dashed #09f;
+            }
+            html {
+                font-family: sans-serif;
+                font-size  : 10px;
+            }
+            h2 {
+                font-size: 3em;
+                margin   : 0;
+            }
+            #controls,
+            #combinations {
+                background: #eee;
+                border    : 0.1em solid #ccc;
+                margin    : 0 0 2em;
+                padding   : 2em;
+            }
+            #controls p strong {
+                display: block;
+            }
+            .textarea strong {
+                margin-bottom: 0.5em;
+            }
+            #controls p {
+                font-size: 1.4em;
+                margin   : 1.5em 0 0;
+            }
+            #combinations p {
+                font-size: 1.4em;
+            }
+            .radio span {
+                display   : inline-block;
+                margin-top: 0.5em;
+                width     : 12em;
+            }
+            textarea {
+                height: 5em;
+                width : 100%;
+            }
+            select,
+            #scheme-name {
+                display  : block;
+                min-width: 10em;
+                width    : 25%;
+            }
+            #scheme-modify {
+                float     : right;
+                margin-top: -2em;
+            }
+            #submit {
+                box-shadow : 0.05em 0.05em 0.1em #999;
+                display    : block;
+                font-size  : 1.4em;
+                font-weight: bold;
+                margin     : 0 auto;
+                min-width  : 20em;
+                width      : 50%;
+            }
+            #error {
+                color: #d00;
+            }
+            #error strong {
+                display: inline;
+            }
+            #output {
+                font-family: monospace;
+                margin     : 0;
+                padding    : 0;
+            }
+            .light {
+                border: 0.1em solid #000;
+                color : #000;
+            }
+            .dark {
+                border: 0.1em solid #fff;
+                color : #fff;
+            }
+            .light p {
+                background: #fff;
+                border    : 0.1em solid #000;
+            }
+            .dark p {
+                background: #000;
+                border    : 0.1em solid #fff;
+            }
+            #output li ul {
+                margin-top: 1em;
+            }
+            #output li p {
+                padding   : 0.25em;
+                text-align: center;
+                width     : 6em;
+            }
+            #output .passfail {
+                width: 15em;
+            }
+            #output li {
+                display: block;
+                padding: 1em;
+            }
+            #output li li {
+                display   : inline-block;
+                height    : 8em;
+                margin    : 0 1em 6em;
+                padding   : 0;
+                text-align: center;
+                width     : 8em;
+            }
+            #output li li p {
+                padding: 0.25em 0;
+                width  : 100%;
+            }
+            #output .pass li p {
+                background  : transparent;
+                border-style: none;
+                font-size   : 1.4em;
+            }
+            #output .fail li p {
+                left    : -0.1em;
+                position: relative;
+                top     : 5.2em;
+            }
+            #output li li span {
+                display: block;
+            }
+            #output .exception {
+                display   : block;
+                font-size : 1.2em;
+                height    : auto;
+                text-align: left;
+                width     : auto;
+            }
+            #output li .exception {
+                font-size: 1em;
+            }
+            #about {
+                max-width: 80em;
+            }
+            #aboutLink {
+                bottom   : -2em;
+                float    : right;
+                font-size: 1.4em;
+                margin   : 0 1em 0 0;
+                position : relative;
+            }
+            #about p,
+            #about li {
+                font-size: 1.4em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><a href="http://www.w3.org/TR/WCAG20/">WCAG 2.0</a>
+            compliance color contrast</h1>
+        <p id="aboutLink"><a href="#about">About this tool</a></p>
+        <section id="controls">
+            <h2>Input controls</h2>
+            <p class="radio"><strong>WCAG compliance level</strong>
+                <span><input checked="checked" id="compliance-aa" name="compliance" type="radio" value="AA"/>
+                    <label for="compliance-aa">AA</label></span>
+                <span><input id="compliance-aaa" name="compliance" type="radio" value="AAA"/>
+                    <label for="compliance-aaa">AAA</label></span>
+            </p>
+            <p class="radio"><strong>Strictness</strong>
+                <span><input checked="checked" id="strictness-strict" name="strictness" type="radio" value="strict"/>
+                    <label for="strictness-strict">All text</label></span>
+                <span><input id="strictness-weak" name="strictness" type="radio" value="weak"/>
+                    <label for="strictness-weak">Large or Bold text</label></span>
+            </p>
+            <p class="radio"><strong>Failing Colors</strong>
+                <span><input checked="checked" id="fail-no" name="fail" type="radio" value="no"/>
+                    <label for="fail-no">Hide failing colors</label></span>
+                <span><input id="fail-yes" name="fail" type="radio" value="yes"/>
+                    <label for="fail-yes">Show failing colors</label></span>
+            </p>
+            <p class="textarea"><strong>Saved Color Schemes</strong>
+                <label for="color-scheme">Choose a color scheme or select
+                    <em>new</em></label>
+                <select id="color-scheme"></select>
+            </p>
+            <p class="textarea"><strong>Modify Saved Color Schemes</strong>
+                <label for="scheme-name">Scheme Name</label>
+                <input id="scheme-name" type="text"/>
+                <button id="scheme-modify" type="button">Modify Saved Color
+                    Schemes</button>
+            </p>
+            <p class="textarea"><strong>Input comma separated color hex codes,
+                example:
+                    <em>#eee, #123def</em></strong>
+                <label for="color-input">Color codes</label>
+                <textarea id="color-input"></textarea>
+            </p>
+            <p><button id="submit" type="button">Show me contrasting colors</button></p>
+            <p id="error" style="display:none"></p>
+        </section>
+        <section id="combinations">
+            <h2>Available color combinations</h2>
+            <p>Minimum required color contrast:
+                <strong>4.5:1</strong></p>
+            <ul id="output"></ul>
+        </section>
+        <section id="about">
+            <div><h2>About this tool</h2>
+                <p>I found several color contrast tools online, but I found none written
+                    in JavaScript and none that compared a plurality of colors. I tired of
+                    watching my coworkers endlessly comparing colors from a limited list of
+                    approved colors. There existed a need, so I built the tool.</p>
+                <p>The intention of this application is to create all contrast
+                    comparisons for a given set of colors once. Since all colors are visible
+                    in a pass or fail state it should be immediately clear what combinations
+                    will be allowed. There is no need to even know what the acceptable rules
+                    and limitations are if using a tool like this.</p>
+                <p>The following rules defined my approach:</p>
+                <ul>
+                    <li><a href="http://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html">Rationale
+                        for Chosen Contrast Ratios</a></li>
+                    <li><a href="http://www.w3.org/TR/WCAG20/#relativeluminancedef">Relative
+                        Luminance</a></li>
+                    <li><a href="http://www.w3.org/TR/WCAG20/#contrast-ratiodef">Contrast
+                        Ratio</a></li>
+                </ul>
+                <p>The solution is achieved by computing the relative luminance for a
+                    given color and then comparing that color with the defined contrast
+                    ratio. The mathmatical definitions are available in the W3C links
+                    mentioned above. The JavaScript solution is available in the JavaScript
+                    function
+                    <em>luminance</em>
+                    of this page's source code.</p>
+                <p>The reason why I had trouble finding similar tools written in
+                    JavaScript is because JavaScript is bad at frational arithmetic. The
+                    solution to this problem is to proportionally multiply all values by a
+                    power of ten until you are far left of the decimal. A few extra digits
+                    is recommended for extra precision.</p>
+            </div>
+            <div><h2>MIT License</h2>
+                <p>Copyright (c) 2015 Austin Cheney</p>
+                <p>Permission is hereby granted, free of charge, to any person obtaining
+                    a copy of this software and associated documentation files (the
+                    "Software"), to deal in the Software without restriction, including
+                    without limitation the rights to use, copy, modify, merge, publish,
+                    distribute, sublicense, and/or sell copies of the Software, and to
+                    permit persons to whom the Software is furnished to do so, subject to
+                    the following conditions:</p>
+                <p>The above copyright notice and this permission notice shall be
+                    included in all copies or substantial portions of the Software.</p>
+                <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+                    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+                    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+                    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+                    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+                    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+                    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></div>
+        </section>
+    </body>
+    <script type="application/javascript" src="colorContrast.js"></script>
+</html>
