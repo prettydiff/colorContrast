@@ -18,7 +18,7 @@ The following rules defined my approach:
 
 The solution is achieved by computing the relative luminance for a given color and then comparing that color with the defined contrast ratio. The mathmatical definitions are available in the W3C links mentioned above. The JavaScript solution is available in the JavaScript function luminance of this page's source code.
 
-The reason why I had trouble finding similar tools written in JavaScript is because JavaScript is bad at frational arithmetic. The solution to this problem is to proportionally multiply all values by a power of ten until you are far left of the decimal. A few extra digits is recommended for extra precision.
+The reason why I had trouble finding similar tools written in JavaScript is because JavaScript is bad at fractional arithmetic. The solution to this problem is to proportionally multiply all values by a power of ten until you are far left of the decimal. A few extra digits is recommended for extra precision.
 
 MIT License
 ---
