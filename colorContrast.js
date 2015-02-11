@@ -148,7 +148,7 @@
                     if (aa.lum - bb.lum > 0) {
                         return 1;
                     }
-                    return 0;
+                    return -1;
                 },
                 len    = values.length;
             if (settings.selectedColor !== "New") {
