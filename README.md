@@ -6,7 +6,7 @@
 Rationale
 ---
 
-I found several color contrast tools online, but I found none written in JavaScript and none that compared a plurality of colors. I tired of watching my coworkers endlessly comparing colors from a limited list of approved colors. There existed a need, so I built the tool.
+I found several color contrast tools online, but I found none written in JavaScript and none that compared a plurality of colors. I tired of watching my coworkers endlessly comparing two colors at a time from a limited list of approved colors. There existed a need, so I built the tool.
 
 The intention of this application is to create all contrast comparisons for a given set of colors once. Since all colors are visible in a pass or fail state it should be immediately clear what combinations will be allowed. There is no need to even know what the acceptable rules and limitations are if using a tool like this.
 
