@@ -56,7 +56,9 @@
                     settings.contrast = 4.5;
                 }
             }
-            document.getElementById("combinations").getElementsByTagName("strong")[0].innerHTML = settings.contrast + " : 1";
+            if (document.getElementById("output").childNodes.length === 0) {
+                document.getElementById("combinations").getElementsByTagName("strong")[0].innerHTML = settings.contrast + " : 1";
+            }
             if (node !== undefined) {
                 localStorage.colorContrast = JSON.stringify(settings);
             }
@@ -129,11 +131,13 @@
         render       = function () {
             var text   = document.getElementById("color-input").value,
                 data   = [],
+                fails  = [],
                 obj    = {},
                 failed = (document.getElementById("fail-yes").checked === true) ? true : false,
                 values = text.replace(/\s+/g, "").split(","),
                 a      = 0,
                 b      = 0,
+                c      = 0,
                 li     = {},
                 lis    = {},
                 p      = {},
@@ -145,7 +149,9 @@
                 classy = "",
                 output = document.getElementById("output"),
                 sort   = function (aa, bb) {
-                    if (aa.lum - bb.lum > 0) {
+                    var alum = (aa.length > 0) ? aa[1] : aa.lum,
+                        blum = (bb.length > 0) ? bb[1] : bb.lum;
+                    if (alum - blum > 0) {
                         return 1;
                     }
                     return -1;
@@ -205,6 +211,7 @@
                 }
                 li.setAttribute("class", classy);
                 li.style.background = data[a].value;
+                fails = [];
                 for (b = 0; b < len; b += 1) {
                     if (a !== b) {
                         if (data[a].lum === data[b].lum) {
@@ -222,19 +229,24 @@
                                 lis.setAttribute("class", classy);
                                 pass.appendChild(lis);
                                 any = true;
-                            } else if (failed === true) {
-                                lis          = document.createElement("li");
-                                ps           = document.createElement("p");
-                                ps.innerHTML = data[b].value + " <span>" + (Math.round(ratio * 10) / 10) + " : 1</span>";
-                                lis.appendChild(ps);
-                                lis.style.background = data[b].value;
-                                lis.setAttribute("class", classy);
-                                fail.appendChild(lis);
+                            } else if (failed === true && data[a].lum !==  data[b].lum) {
+                                fails.push([data[b], ratio]);
                             }
                         }
                     }
                 }
                 if (failed === true) {
+                    fails.sort(sort);
+                    c = fails.length;
+                    for (b = 0; b < c; b += 1) {
+                        lis          = document.createElement("li");
+                        ps           = document.createElement("p");
+                        ps.innerHTML = fails[b][0].value + " <span>" + (Math.round(fails[b][1] * 10) / 10) + " : 1</span>";
+                        lis.appendChild(ps);
+                        lis.style.background = fails[b][0].value;
+                        lis.setAttribute("class", classy);
+                        fail.appendChild(lis);
+                    }
                     p           = document.createElement("p");
                     p.innerHTML = "Passed color contrast";
                     p.setAttribute("class", "passfail");
@@ -259,6 +271,7 @@
             if (any === false && failed === false) {
                 output.innerHTML = "<li class='exception'>None of the colors sufficiently contrast.</li>";
             }
+            document.getElementById("combinations").getElementsByTagName("strong")[0].innerHTML = settings.contrast + " : 1";
         };
     (function () {
         var radios = document.getElementsByTagName("input"),
@@ -289,7 +302,8 @@
         for (a = radios.length - 1; a > -1; a -= 1) {
             if (radios[a].getAttribute("type") === "radio") {
                 radios[a].onclick = setContrast;
-                if (radios[a].checked === true) {
+                if (settings[radios[a].getAttribute("name")] === radios[a].getAttribute("id")) {
+                    radios[a].checked = true;
                     settings[radios[a].getAttribute("name")] = radios[a].getAttribute("id");
                 }
             }
