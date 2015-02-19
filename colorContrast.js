@@ -198,6 +198,9 @@
                     }
                 }
                 obj       = {};
+                if (values[a].charAt(1) === values[a].charAt(2) && values[a].charAt(3) === values[a].charAt(4) && values[a].charAt(5) === values[a].charAt(6)) {
+                    values[a] = "#" + values[a].charAt(1) + values[a].charAt(2) + values[a].charAt(3);
+                }
                 obj.value = values[a];
                 obj.rgb   = hexToDec(obj.value);
                 obj.lum   = (luminance(obj.rgb) * 1000);
