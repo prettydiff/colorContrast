@@ -131,7 +131,8 @@
         render       = function () {
             var text   = document.getElementById("color-input").value,
                 data   = [],
-                fails  = [],
+                failc  = [],
+                passc  = [],
                 obj    = {},
                 failed = (document.getElementById("fail-yes").checked === true) ? true : false,
                 values = text.replace(/\s+/g, "").split(","),
@@ -155,6 +156,14 @@
                         return 1;
                     }
                     return -1;
+                },
+                sorti  = function (aa, bb) {
+                    var alum = (aa.length > 0) ? aa[1] : aa.lum,
+                        blum = (bb.length > 0) ? bb[1] : bb.lum;
+                    if (alum - blum > 0) {
+                        return -1;
+                    }
+                    return 1;
                 },
                 len    = values.length;
             if (settings.selectedColor !== "New") {
@@ -211,7 +220,8 @@
                 }
                 li.setAttribute("class", classy);
                 li.style.background = data[a].value;
-                fails = [];
+                failc = [];
+                passc = [];
                 for (b = 0; b < len; b += 1) {
                     if (a !== b) {
                         if (data[a].lum === data[b].lum) {
@@ -220,30 +230,35 @@
                         } else {
                             ratio = (data[a].lum > data[b].lum) ? ((data[a].lum + 50) / (data[b].lum + 50)) : ((data[b].lum + 50) / (data[a].lum + 50));
                             if (ratio >= settings.contrast) {
-                                lis          = document.createElement("li");
-                                ps           = document.createElement("p");
-                                ps.innerHTML = data[b].value + " <span>" + (Math.round(ratio * 10) / 10) + " : 1</span>";
-                                lis.appendChild(ps);
-                                lis.style.background = data[b].value;
-                                lis.style.color      = data[a].value;
-                                lis.setAttribute("class", classy);
-                                pass.appendChild(lis);
+                                passc.push([data[b], ratio]);
                                 any = true;
                             } else if (failed === true && data[a].lum !==  data[b].lum) {
-                                fails.push([data[b], ratio]);
+                                failc.push([data[b], ratio]);
                             }
                         }
                     }
                 }
+                passc.sort(sorti);
+                c = passc.length;
+                for (b = 0; b < c; b += 1) {
+                    lis          = document.createElement("li");
+                    ps           = document.createElement("p");
+                    ps.innerHTML = passc[b][0].value + " <span>" + (Math.round(passc[b][1] * 10) / 10) + " : 1</span>";
+                    lis.appendChild(ps);
+                    lis.style.background = passc[b][0].value;
+                    lis.style.color      = data[a].value;
+                    lis.setAttribute("class", classy);
+                    pass.appendChild(lis);
+                }
                 if (failed === true) {
-                    fails.sort(sort);
-                    c = fails.length;
+                    failc.sort(sort);
+                    c = failc.length;
                     for (b = 0; b < c; b += 1) {
                         lis          = document.createElement("li");
                         ps           = document.createElement("p");
-                        ps.innerHTML = fails[b][0].value + " <span>" + (Math.round(fails[b][1] * 10) / 10) + " : 1</span>";
+                        ps.innerHTML = failc[b][0].value + " <span>" + (Math.round(failc[b][1] * 10) / 10) + " : 1</span>";
                         lis.appendChild(ps);
-                        lis.style.background = fails[b][0].value;
+                        lis.style.background = failc[b][0].value;
                         lis.setAttribute("class", classy);
                         fail.appendChild(lis);
                     }
